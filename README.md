@@ -1,6 +1,4 @@
-# My Home Assistant Addons
-
-This repository contains addons for Home Assistant that I hope people will find useful.
+# Abode Cam 2 to RTC
 
 > **Fork notice:** this is a fork of [tradel/hassio-addons](https://github.com/tradel/hassio-addons).
 > The Abode Camera Streaming add-on was created by Todd Radel ([@tradel](https://github.com/tradel)),
