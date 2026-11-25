@@ -1,3 +1,3 @@
-name: Home Assistant addon repository from Todd Radel
-url: 'https://github.com/tradel/hassio-addons'
-maintainer: Todd Radel <todd@radel.us>
+name: Home Assistant add-ons from Gary DuVall (fork of tradel/hassio-addons)
+url: 'https://github.com/duvallg/hassio-addons'
+maintainer: Gary DuVall (https://github.com/duvallg)
