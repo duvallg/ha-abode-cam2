@@ -19,7 +19,9 @@ This repository contains the following add-ons:
 ![Supports armv7 Architecture][armv7-shield]
 ![Supports i386 Architecture][i386-shield]
 
-_Provides streaming video from Abode security cameras._
+_Live video from Abode cameras, including the Abode Cam 2, over one persistent Abode session with no sign-in email per stream._
+
+[![Open your Home Assistant instance and show the add-on.](https://my.home-assistant.io/badges/supervisor_addon.svg)](https://my.home-assistant.io/redirect/supervisor_addon/?addon=82aaea8b_abode2rtc&repository_url=https%3A%2F%2Fgithub.com%2Fduvallg%2Fha-abode-cam2)
 
 <!--
 

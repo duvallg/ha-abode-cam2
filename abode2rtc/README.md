@@ -1,6 +1,6 @@
 # Home Assistant Add-on: Abode Camera Streaming
 
-_Live video from Abode cameras, including the Abode Cam 2, in Home Assistant._
+_Live video from Abode cameras, including the Abode Cam 2, over one persistent Abode session with no sign-in email per stream._
 
 ![Supports aarch64 Architecture][aarch64-shield]
 ![Supports amd64 Architecture][amd64-shield]
@@ -70,6 +70,12 @@ that API.
    Home Assistant's integration marketplace) and restart Home Assistant.
 
 ### Install the add-on
+
+Click to add the repository and open the add-on in your Home Assistant:
+
+[![Open your Home Assistant instance and show the add-on.](https://my.home-assistant.io/badges/supervisor_addon.svg)](https://my.home-assistant.io/redirect/supervisor_addon/?addon=82aaea8b_abode2rtc&repository_url=https%3A%2F%2Fgithub.com%2Fduvallg%2Fha-abode-cam2)
+
+Or add it by hand:
 
 1. Go to **Settings** > **Apps** and open the app store.
 2. Open the **⋮** menu in the top right and select **Repositories**.
