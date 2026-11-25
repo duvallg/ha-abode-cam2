@@ -1,6 +1,6 @@
-# Home Assistant Add-on: Abode Camera Streaming Support
+# Home Assistant Add-on: Abode Camera Streaming
 
-_Provides streaming video from Abode security cameras._
+_Live video from Abode cameras, including the Abode Cam 2, in Home Assistant._
 
 ![Supports aarch64 Architecture][aarch64-shield]
 ![Supports amd64 Architecture][amd64-shield]
@@ -10,204 +10,152 @@ _Provides streaming video from Abode security cameras._
 
 ![Sample Lovelace dashboard with camera live view](assets/lovelace.png)
 
-
 ## Introduction
 
-This is an unofficial addon to [Home Assistant][hass] to support streaming the
-Live View from [Abode] cameras. It is based on the excellent work by @AlexxIT and
-his [go2rtc] streamer. Many, many thanks to Alex for his hard work!
+The core [Abode integration][abode-int] only exposes the last snapshot for Abode
+cameras, and the Abode Cam 2 has no officially supported local stream (RTSP or
+ONVIF). This add-on fills that gap: it requests each camera's Live View stream
+from Abode and serves it through [go2rtc], so you can watch it live on a Home
+Assistant dashboard with the WebRTC Camera card.
+
+### Credits
 
 This add-on was written by Todd Radel ([@tradel](https://github.com/tradel)) in
-[tradel/hassio-addons](https://github.com/tradel/hassio-addons). This copy is a fork that
-reuses one Abode session instead of signing in on every stream (see
-[tradel/hassio-addons#16](https://github.com/tradel/hassio-addons/issues/16)).
+[tradel/hassio-addons](https://github.com/tradel/hassio-addons). Streaming is
+handled by [go2rtc] by Alex X ([@AlexxIT](https://github.com/AlexxIT)).
 
-~~Due to the fact that Abode cuts off the stream when idle, this is currently
-more of a proof of concept than anything else. See [below](#limit).~~
+### What this fork changes
 
-As of version 1.2.0, the KVS streams should not time out anymore. Instead of
-generating all the URLs as soon as the addon starts, it uses the [echo] feature
-of go2rtc to generate the URL right before streaming starts.
+- **One Abode login per add-on start.** The original signed in to Abode on every
+  stream start, as a new device each time. Abode sent a sign-in email for each
+  one and eventually rate-limited the account. This version keeps one session
+  alive, reuses it for every stream, and logs in from a persistent device ID.
+  See [tradel/hassio-addons#16][issue16].
+- **Built on your device.** Supervisor builds the add-on from this repository
+  instead of pulling a prebuilt image.
 
-**NOTE:** Abode has not published official APIs for their cameras. This addon was
-written by observing the Abode web app and reverse-engineering the API calls.
-It may stop working if Abode changes their internal APIs.
+Tested with three Abode Cam 2 cameras on Home Assistant OS (aarch64) with
+WebRTC Camera 3.6.1.
 
+**Note:** Abode has not published an API for its cameras. This add-on uses the
+same internal API as the Abode web app, so it may stop working if Abode changes
+that API.
 
 ## Installation
 
-This addon relies on a couple of other custom components: namely [Abode][abode-int]
-and WebRTC Camera.
-
 ### Prerequisites
 
- 1. If you haven't installed [HACS] yet, do that first. Don't forget to restart
-    Home Assistant after you install it.
- 2. Add the [Abode component][abode-int]. After it's configured, you should see
-    entities for each of your cameras.
- 3. Go into HACS and install the "WebRTC Camera" component. Restart Home Assistant.
- 4. Go into **Settings** > **Devices & services** and add "WebRTC Camera".
-    When prompted for the go2rtc URL, make sure it says `http://localhost:1984/`.
+1. Set up the [Abode integration][abode-int]. You should see a `camera.` entity
+   for each Abode camera.
+2. Install the [WebRTC Camera][webrtc-repo] custom integration (from [HACS] or
+   Home Assistant's integration marketplace) and restart Home Assistant.
 
-Now you're ready!
+### Install the add-on
 
-### Installing with Supervisor
+1. Go to **Settings** > **Apps** and open the app store.
+2. Open the **⋮** menu in the top right and select **Repositories**.
+3. Add `https://github.com/duvallg/ha-abode-cam2`.
+4. Refresh the page, then find **Abode Camera Streaming** and install it.
 
-Add the repository by following these steps:
-
- 1. Navigate to **Settings** > **Add-ons**.
- 2. Click the **Add-On Store** button.
- 3. In the top right, click the 3-dots menu and select **Repositories**.
- 4. Paste in the URL `https://github.com/duvallg/ha-abode-cam2` and click **Add**.
-
-Next, refresh your browser (F5 or Ctrl-R), then find the "Abode Camera Streaming"
-addon and install it.
-
-### Installing with Docker
-
-Coming soon.
-
-### Manual installation
-
-Coming soon.
+If the original add-on from `tradel/hassio-addons` is installed, uninstall it
+or at least stop it first. Both bind host ports 1984, 8554 and 8555, and running
+the original brings back the per-stream sign-in emails.
 
 ## Configuration
 
-Once the addon is installed, click the Configuration tab. The only required fields
-are your Abode username (usually an email address) and password. Don't forget to click Save.
+Open the add-on's **Configuration** tab, enter your Abode username (the email
+address you sign in to Abode with) and password, and click **Save**. Then start
+the add-on from the **Info** tab.
 
-![Addon configuration screen](assets/config.png)
+![Add-on configuration screen](assets/config.png)
 
-## Adding the stream to a Lovelace dashboard
+Expect one Abode sign-in email each time the add-on starts (and the first start
+registers a new device). Viewing cameras doesn't sign in again.
 
-Edit your dashboard or create a new one. Click the **Add Card** button and select
-the "Custom: WebRTC Camera" card type. As of this writing, WebRTC Camera does not
-support visual editing, so HA will open a YAML editor. Copy and paste the following
-code into the editor:
+Accounts with multi-factor authentication enabled have been reported not to
+work (see [tradel/hassio-addons#12][issue12]). If Abode refuses the login, the
+add-on log shows the HTTP status and Abode's response.
+
+### Connect WebRTC Camera
+
+Once the add-on is running, go to **Settings** > **Devices & services**, add
+**WebRTC Camera**, and set the go2rtc URL to `http://localhost:1984/`. Setup
+fails if the add-on isn't running yet.
+
+## Adding a camera to a dashboard
+
+The add-on creates one go2rtc stream per Abode camera, named after the camera's
+entity ID without the `camera.` prefix. For example, `camera.garage_camera`
+becomes `garage_camera`.
+
+Add a manual card with:
 
 ```yaml
 type: custom:webrtc-camera
-streams:
-  - type: webrtc
-    url: kitchen_cam
+url: garage_camera
+muted: true
 ```
 
-Replace `kitchen_cam` with the entity name of your camera.
-
-The WebRTC Camera component has lots of other options. Consult [the documentation][webrtc]
-to see what's supported.
+See the [WebRTC Camera documentation][webrtc] for more options.
 
 ## How it works
 
-Unlike most home automation cameras, the Abode cams don't seem to support any kind of
-local streaming. Network probes don't show any open ports at all.
-
-Instead, the cameras send video to [Amazon Kinesis Video Streams][kvs], which handles
-features like motion detection and transcoding. When you start Live View, the
-[Abode app][webapp] makes a POST to `/integrations/v1/camera/.../kvs/stream`, which
-sets up a KVS stream and returns the endpoint URL and other data to the app:
+Abode cameras don't expose a supported local stream. They send video to
+[Amazon Kinesis Video Streams][kvs]. When you open Live View, the
+[Abode web app][webapp] calls `POST /integrations/v1/camera/{uuid}/kvs/stream`
+to get a short-lived WebRTC signaling endpoint and ICE servers:
 
 ```json
 {
     "channelEndpoint": "wss://v-50e9eb79.kinesisvideo.us-west-2.amazonaws.com/...",
     "iceServers": [
-        {
-            "urls": [
-                "stun:stun.kinesisvideo.us-west-2.amazonaws.com:443"
-            ]
-        },
-        {
-            "credential": "...",
-            "username": "...",
-            "urls": [
-                "turn:35-91-177-138.t-853e5b95.kinesisvideo.us-west-2.amazonaws.com:443?transport=udp",
-                "turns:35-91-177-138.t-853e5b95.kinesisvideo.us-west-2.amazonaws.com:443?transport=udp",
-                "turns:35-91-177-138.t-853e5b95.kinesisvideo.us-west-2.amazonaws.com:443?transport=tcp"
-            ]
-        },
-        {
-            "credential": "...",
-            "username": "...",
-            "urls": [
-                "turn:54-200-107-138.t-853e5b95.kinesisvideo.us-west-2.amazonaws.com:443?transport=udp",
-                "turns:54-200-107-138.t-853e5b95.kinesisvideo.us-west-2.amazonaws.com:443?transport=udp",
-                "turns:54-200-107-138.t-853e5b95.kinesisvideo.us-west-2.amazonaws.com:443?transport=tcp"
-            ]
-        }
+        {"urls": ["stun:stun.kinesisvideo.us-west-2.amazonaws.com:443"]},
+        {"credential": "...", "username": "...", "urls": ["turns:...:443?transport=tcp"]}
     ],
     "type": "KVS"
 }
 ```
 
-At first I tried to build some kind of Frankenstein KVS proxy, but it turns out that
-[go2rtc] already knows how to handle KVS streams, so after tearing out what little
-hair I had left, the solution turned out to be surprisingly easy. I just get the
-Abode camera IDs from Home Assistant, call the Abode API for each, use those URLs
-to create a `go2rtc.yaml` configuration file, and then launch `go2rtc`.
+[go2rtc] can play Kinesis WebRTC streams directly. On startup, the add-on:
 
-The end result looks like this:
+1. Signs in to Abode once, saves the session, and refreshes its access token in
+   the background.
+2. Reads the Abode camera entities from Home Assistant.
+3. Writes a `go2rtc.yaml` with one stream per camera using go2rtc's [echo]
+   source, so a camera's endpoint is fetched only when its stream starts. The
+   endpoints expire within minutes, so they can't be generated up front.
+4. Starts go2rtc.
+
+Each stream entry runs `stream.py` when a viewer connects:
 
 ```yaml
-webrtc:
-  candidates:
-    - stun:8555
-
-hass:
-  config: '/config'
-
-log:
-  level: 'info'
-
 streams:
-  kitchen_cam: 'webrtc:wss://v-50e9eb79.kinesisvideo.us-west-2.amazonaws.com/...#format=kinesis#client_id=1658369854733#ice_servers=[{"urls": [...]}]'
+  garage_camera: 'echo:python3 /app/stream.py /tmp/abode.json XF:b0c5ca3e8a79'
 ```
 
+`stream.py` requests a fresh endpoint with the saved session and returns it to
+go2rtc. It signs in again only if Abode rejects the saved session, and it skips
+offline cameras without signing in.
 
 ## Limitations
 
-- <a name="limit"></a>
-  ~~Streams only work for a few minutes before the URL becomes invalid. This doesn't
-  happen if the stream is actively playing. I suspect that Abode is shutting down
-  inactive KVS streams to save resources. I am working on potential solutions for this.~~
-  *(fixed in 1.2.0)*
-
-- ~~If go2rtc or other streaming addons are installed, there may be port conflicts
-  and abode2rtc will fail to start. This will be fixed in a future release.~~
-  *(fixed in 1.2.0)*
-
-- The addon includes an AppArmor profile for security, but the profile still needs
-  some tweaking, so it's currently in "complain" mode. Once I have time to tweak it,
-  I'll turn on enforcing mode.
-
-## Frequently Asked Questions (FAQ)
-
-**I see the error "streams: websocket: bad handshake".**
-
-Try upgrading to version 1.2.0 or later of the addon. If you still see this, please
-[open a Github issue][bug] and include the complete log.
-
-**Why isn't the armhf platform supported?**
-
-This addon relies on [go2rtc], which doesn't support armhf.
-
-**I have another problem.**
-
-Feel free to [create a Github issue][bug] and I'll take a look. Please include the
-full log from the addon, if possible.
-
+- Depends on Abode's cloud. If Abode or your internet connection is down, there
+  is no stream.
+- The AppArmor profile runs in complain mode.
+- armhf isn't supported because go2rtc doesn't support it.
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
 [armhf-shield]: https://img.shields.io/badge/armhf-no-red.svg
 [armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
 [i386-shield]: https://img.shields.io/badge/i386-yes-green.svg
-[abode]: https://goabode.com/
-[hass]: https://www.home-assistant.io/
-[hacs]: https://hacs.xyz/
 [abode-int]: https://www.home-assistant.io/integrations/abode/
+[hacs]: https://hacs.xyz/
 [go2rtc]: https://github.com/AlexxIT/go2rtc
+[webrtc-repo]: https://github.com/AlexxIT/WebRTC
 [webrtc]: https://github.com/AlexxIT/WebRTC/blob/master/README.md#custom-card
 [kvs]: https://aws.amazon.com/kinesis/video-streams/
 [webapp]: https://my.goabode.com/#/app/live-video
-[bug]: https://github.com/tradel/hassio-addons/issues/new/choose
 [echo]: https://github.com/AlexxIT/go2rtc/wiki/Source-Echo-examples
+[issue12]: https://github.com/tradel/hassio-addons/issues/12
+[issue16]: https://github.com/tradel/hassio-addons/issues/16

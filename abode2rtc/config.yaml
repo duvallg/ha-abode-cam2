@@ -1,7 +1,7 @@
 name: Abode Camera Streaming
 version: 1.2.10
 slug: abode2rtc
-description: Provides streaming video from Abode security cameras
+description: Live video from Abode cameras, including the Abode Cam 2
 url: https://github.com/duvallg/ha-abode-cam2/tree/main/abode2rtc
 arch: [amd64, aarch64, armv7, i386]
 init: false
