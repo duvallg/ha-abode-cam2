@@ -3,7 +3,6 @@
 ## 1.2.10
 
 - Build the add-on locally instead of pulling a prebuilt image
-
 - Reuse one Abode session instead of logging in on every stream start, which sent
   a "new sign-in" email per stream and could get the account rate-limited (#16)
 - Keep the saved session's access token refreshed in the background
