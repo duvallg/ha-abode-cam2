@@ -24,6 +24,25 @@ This add-on was written by Todd Radel ([@tradel](https://github.com/tradel)) in
 [tradel/hassio-addons](https://github.com/tradel/hassio-addons). Streaming is
 handled by [go2rtc] by Alex X ([@AlexxIT](https://github.com/AlexxIT)).
 
+### History
+
+The add-on was developed in the open in the Home Assistant Community thread
+[Abode security cameras][thread], which Todd started on 2023-10-27 with the
+first release. Highlights from that thread:
+
+- **v1.2.2 (2023-11):** streams stopped timing out after a few minutes once the
+  add-on fetched the KVS endpoint from Abode right before each stream started.
+  This fork keeps that design.
+- **Abode Cam 2:** users reported working live view on Abode Cam 2 cameras
+  (2024-01, 2024-03). The camera built into the Abode iota base was reported
+  not to work.
+- **Port conflicts:** the add-on embeds its own go2rtc, so it can't run
+  alongside the go2rtc add-on or anything else on ports 1984/8554.
+- **2FA:** accounts with two-factor authentication weren't supported.
+
+The per-stream sign-in emails fixed here were not raised in that thread. They
+are tracked in [tradel/hassio-addons#16][issue16].
+
 ### What this fork changes
 
 - **One Abode login per add-on start.** The original signed in to Abode on every
@@ -159,3 +178,4 @@ offline cameras without signing in.
 [echo]: https://github.com/AlexxIT/go2rtc/wiki/Source-Echo-examples
 [issue12]: https://github.com/tradel/hassio-addons/issues/12
 [issue16]: https://github.com/tradel/hassio-addons/issues/16
+[thread]: https://community.home-assistant.io/t/abode-security-cameras/632522
