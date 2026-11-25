@@ -9,8 +9,6 @@ This repository contains addons for Home Assistant that I hope people will find 
 > account rate-limiting. The fix is offered upstream in
 > [tradel/hassio-addons#17](https://github.com/tradel/hassio-addons/pull/17).
 
-[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fduvallg%2Fhassio-addons)
-
 ## Add-ons
 
 This repository contains the following add-ons:

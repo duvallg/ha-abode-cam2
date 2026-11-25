@@ -53,12 +53,7 @@ Now you're ready!
 
 ### Installing with Supervisor
 
-If you're running HassOS with Supervisor, installing this addon is a piece of cake.
-Just click the big blue button:
-
-[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fduvallg%2Fhassio-addons)
-
-Or you can add the repository by following these steps:
+Add the repository by following these steps:
 
  1. Navigate to **Settings** > **Add-ons**.
  2. Click the **Add-On Store** button.
