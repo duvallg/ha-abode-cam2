@@ -17,6 +17,11 @@ This is an unofficial addon to [Home Assistant][hass] to support streaming the
 Live View from [Abode] cameras. It is based on the excellent work by @AlexxIT and
 his [go2rtc] streamer. Many, many thanks to Alex for his hard work!
 
+This add-on was written by Todd Radel ([@tradel](https://github.com/tradel)) in
+[tradel/hassio-addons](https://github.com/tradel/hassio-addons). This copy is a fork that
+reuses one Abode session instead of signing in on every stream (see
+[tradel/hassio-addons#16](https://github.com/tradel/hassio-addons/issues/16)).
+
 ~~Due to the fact that Abode cuts off the stream when idle, this is currently
 more of a proof of concept than anything else. See [below](#limit).~~
 
@@ -51,14 +56,14 @@ Now you're ready!
 If you're running HassOS with Supervisor, installing this addon is a piece of cake.
 Just click the big blue button:
 
-[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Ftradel%2Fhassio-addons)
+[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fduvallg%2Fhassio-addons)
 
 Or you can add the repository by following these steps:
 
  1. Navigate to **Settings** > **Add-ons**.
  2. Click the **Add-On Store** button.
  3. In the top right, click the 3-dots menu and select **Repositories**.
- 4. Paste in the URL `https://github.com/tradel/hassio-addons` and click **Add**.
+ 4. Paste in the URL `https://github.com/duvallg/hassio-addons` and click **Add**.
 
 Next, refresh your browser (F5 or Ctrl-R), then find the "Abode Camera Streaming"
 addon and install it.

@@ -2,7 +2,14 @@
 
 This repository contains addons for Home Assistant that I hope people will find useful.
 
-[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Ftradel%2Fhassio-addons)
+> **Fork notice:** this is a fork of [tradel/hassio-addons](https://github.com/tradel/hassio-addons).
+> The Abode Camera Streaming add-on was created by Todd Radel ([@tradel](https://github.com/tradel)),
+> and all credit for it goes to him. This fork adds one fix: the add-on reuses a single Abode
+> session instead of signing in on every stream, which stopped a flood of sign-in emails and
+> account rate-limiting. The fix is offered upstream in
+> [tradel/hassio-addons#17](https://github.com/tradel/hassio-addons/pull/17).
+
+[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fduvallg%2Fhassio-addons)
 
 ## Add-ons
 
