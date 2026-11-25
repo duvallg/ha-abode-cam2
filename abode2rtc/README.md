@@ -58,7 +58,7 @@ Add the repository by following these steps:
  1. Navigate to **Settings** > **Add-ons**.
  2. Click the **Add-On Store** button.
  3. In the top right, click the 3-dots menu and select **Repositories**.
- 4. Paste in the URL `https://github.com/duvallg/hassio-addons` and click **Add**.
+ 4. Paste in the URL `https://github.com/duvallg/ha-abode-cam2` and click **Add**.
 
 Next, refresh your browser (F5 or Ctrl-R), then find the "Abode Camera Streaming"
 addon and install it.
